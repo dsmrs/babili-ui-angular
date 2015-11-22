@@ -1,0 +1,17 @@
+<div class="babili-ui">
+  <div class="modal-header">
+    <h3 class="modal-title">Edit room</h3>
+  </div>
+  <form name="form" ng-submit="submit()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control form-control-inverted" ng-model="room.name" placeholder="Enter a room name" required>
+      </div>
+    <div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="cancel($event)">Cancel</button>
+      <input type="submit" class="btn btn-primary" value="Save">
+    </div>
+  </form>
+</div>
