@@ -6,7 +6,7 @@
     $scope.room = room;
 
     $scope.submit = function () {
-      babiliUser.updateRoom($scope.room).then(function () {
+      babiliUser.updateRoomName($scope.room).then(function () {
         $modalInstance.close(room);
       });
     };

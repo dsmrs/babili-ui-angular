@@ -30,33 +30,33 @@
     </ul>
   </div>
 
-  <div class="col-md-9 no-room-selected-placeholder" ng-hide="openedRoom()">
+  <div class="col-md-9 no-room-selected-placeholder" ng-hide="openedRoom">
     <p>
-      Hi {{user.name}},
+      Hi {{user}},
       <br/>
       you need to select a room.
     </p>
   </div>
 
-  <div class="col-md-9 room" ng-show="openedRoom()">
+  <div class="col-md-9 room" ng-show="openedRoom">
     <h2>
-      {{roomName(openedRoom())}}
-      <a href="#" ng-click="editRoom(openedRoom())" class="fa-big-link">
+      {{roomName(openedRoom)}}
+      <a href="#" ng-click="editRoom(openedRoom)" class="fa-big-link">
         <i class="fa fa-pencil-square-o"></i>
       </a>
       <small class="pull-right">
-        <a href="#" ng-click="addUserToRoom(openedRoom())" class="fa-big-link">
+        <a href="#" ng-click="addUserToRoom(openedRoom)" class="fa-big-link">
           <i class="fa fa-user"></i>
         </a>
 
-        <a href="#" ng-click="closeRoom(openedRoom())" class="fa-big-link">
+        <a href="#" ng-click="closeRoom(openedRoom)" class="fa-big-link">
           <i class="fa fa-times-circle"></i>
         </a>
       </small>
     </h2>
-    <div class="room-messages" scroll-bottom="openedRoom().messages">
+    <div class="room-messages" scroll-bottom="openedRoom.messages">
       <ul>
-        <li ng-repeat="message in openedRoom().messages track by message.id" ng-class="isMessageSentByMe(message)? 'message-sent':'message-received'">
+        <li ng-repeat="message in openedRoom.messages track by message.id" ng-class="babiliUser.messageSentByMe(message)? 'message-sent':'message-received'">
           <div>{{message.content}}</div>
           <div class="message-information" ng-hide="isMessageSentByMe(message)">
             Sent by {{message.senderId}} at {{message.createdAt}}
@@ -70,7 +70,7 @@
     </div>
     <div class="room-new-message">
       <div class="row full-height">
-        <form name="form" ng-submit="sendMessage(openedRoom())">
+        <form name="form" ng-submit="sendMessage(openedRoom)">
           <div class="col-md-10 full-height">
             <textarea class="form-control" id="message" ng-model="newMessage.content" placeholder="Type your message" required></textarea>
           </div>

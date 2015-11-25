@@ -6,7 +6,6 @@
     $scope.babiliUser   = babiliUser;
     $scope.user         = user;
     $scope.users        = users;
-    $scope.openedRoomId = null;
     $scope.newMessage   = {};
 
     $scope.createRoom = function () {
@@ -74,28 +73,24 @@
     };
 
     $scope.closeRoom = function (room) {
-      if (room !== null) {
-        babiliUser.closeRoom(room).then(function () {
-          $scope.$apply(function () {
-            $scope.openedRoomId = null;
-          });
+      babiliUser.closeRoom(room).then(function () {
+        $scope.$apply(function () {
+          $scope.openedRoom = null;
         });
-      }
+      });
     };
 
     $scope.openRoom = function (room) {
-      if (room.id !== $scope.openedRoomId) {
-        babiliUser.openSingleRoom(room).then(function (openedRoom) {
+      babiliUser.openRoomAndCloseOthers(room).then(function (openedRoom) {
+        if (openedRoom) {
           $scope.$apply(function () {
-            $scope.openedRoomId = openedRoom.id;
-            $(".room-messages").scrollTop($(".room-messages")[0].scrollHeight);
+            $scope.openedRoom = openedRoom;
+            setTimeout(function () {
+              $(".room-messages").scrollTop($(".room-messages")[0].scrollHeight);
+            }, 4);
           });
-        });
-      }
-    };
-
-    $scope.openedRoom = function () {
-      return babiliUser.openedRooms()[0];
+        }
+      });
     };
 
     $scope.getUserFromBabiliId = function (babiliId) {
@@ -105,20 +100,14 @@
     };
 
     $scope.sendMessage = function (room) {
-      if ($scope.newMessage.content !== null) {
-        babiliUser.sendMessage(room, {
-          content: $scope.newMessage.content,
-          contentType: "text"
-        }).then(function () {
-          $scope.newMessage.content = null;
-          $scope.$apply(function () {
-          });
+      babiliUser.sendMessage(room, {
+        content: $scope.newMessage.content,
+        contentType: "text"
+      }).then(function () {
+        $scope.newMessage.content = null;
+        $scope.$apply(function () {
         });
-      }
-    };
-
-    $scope.isMessageSentByMe = function (message) {
-      return $scope.user.babiliId === message.senderId;
+      });
     };
   });
 }());

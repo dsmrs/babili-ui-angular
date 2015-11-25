@@ -103,6 +103,7 @@
 .babili-ui .no-room-selected-placeholder {
   color: black;
   text-align: left;
+  margin-top: 5px;
   font-size: 2em;
 }
 .babili-ui .fa-big-link {
