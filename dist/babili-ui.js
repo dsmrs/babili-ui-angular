@@ -26,10 +26,13 @@
             id: $stateParams.id
           }).$promise;
         }],
-        babiliUser: ["$rootScope", "user", "users", "babiliHelper", function ($rootScope, user, users, babiliHelper) {
-          return babiliHelper.start($rootScope);
+        babiliUser: ["$rootScope", "user", "users", "babili", function ($rootScope, user, users, babili) {
+          return babili.connect($rootScope, user.babiliToken);
         }]
-      }
+      },
+      onExit: ["babili", function (babili) {
+        babili.disconnect();
+      }]
     });
   }]);
 }());
@@ -42,7 +45,6 @@
     $scope.babiliUser   = babiliUser;
     $scope.user         = user;
     $scope.users        = users;
-    $scope.openedRoomId = null;
     $scope.newMessage   = {};
 
     $scope.createRoom = function () {
@@ -110,28 +112,24 @@
     };
 
     $scope.closeRoom = function (room) {
-      if (room !== null) {
-        babiliUser.closeRoom(room).then(function () {
-          $scope.$apply(function () {
-            $scope.openedRoomId = null;
-          });
+      babiliUser.closeRoom(room).then(function () {
+        $scope.$apply(function () {
+          $scope.openedRoom = null;
         });
-      }
+      });
     };
 
     $scope.openRoom = function (room) {
-      if (room.id !== $scope.openedRoomId) {
-        babiliUser.openSingleRoom(room).then(function (openedRoom) {
+      babiliUser.openRoomAndCloseOthers(room).then(function (openedRoom) {
+        if (openedRoom) {
           $scope.$apply(function () {
-            $scope.openedRoomId = openedRoom.id;
-            $(".room-messages").scrollTop($(".room-messages")[0].scrollHeight);
+            $scope.openedRoom = openedRoom;
+            setTimeout(function () {
+              $(".room-messages").scrollTop($(".room-messages")[0].scrollHeight);
+            }, 4);
           });
-        });
-      }
-    };
-
-    $scope.openedRoom = function () {
-      return babiliUser.openedRooms()[0];
+        }
+      });
     };
 
     $scope.getUserFromBabiliId = function (babiliId) {
@@ -141,20 +139,14 @@
     };
 
     $scope.sendMessage = function (room) {
-      if ($scope.newMessage.content !== null) {
-        babiliUser.sendMessage(room, {
-          content: $scope.newMessage.content,
-          contentType: "text"
-        }).then(function () {
-          $scope.newMessage.content = null;
-          $scope.$apply(function () {
-          });
+      babiliUser.sendMessage(room, {
+        content: $scope.newMessage.content,
+        contentType: "text"
+      }).then(function () {
+        $scope.newMessage.content = null;
+        $scope.$apply(function () {
         });
-      }
-    };
-
-    $scope.isMessageSentByMe = function (message) {
-      return $scope.user.babiliId === message.senderId;
+      });
     };
   }]);
 }());
@@ -216,7 +208,7 @@
     $scope.room = room;
 
     $scope.submit = function () {
-      babiliUser.updateRoom($scope.room).then(function () {
+      babiliUser.updateRoomName($scope.room).then(function () {
         $modalInstance.close(room);
       });
     };
@@ -313,33 +305,33 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "    </ul>\n" +
     "  </div>\n" +
     "\n" +
-    "  <div class=\"col-md-9 no-room-selected-placeholder\" ng-hide=\"openedRoom()\">\n" +
+    "  <div class=\"col-md-9 no-room-selected-placeholder\" ng-hide=\"openedRoom\">\n" +
     "    <p>\n" +
-    "      Hi {{user.name}},\n" +
+    "      Hi {{user}},\n" +
     "      <br/>\n" +
     "      you need to select a room.\n" +
     "    </p>\n" +
     "  </div>\n" +
     "\n" +
-    "  <div class=\"col-md-9 room\" ng-show=\"openedRoom()\">\n" +
+    "  <div class=\"col-md-9 room\" ng-show=\"openedRoom\">\n" +
     "    <h2>\n" +
-    "      {{roomName(openedRoom())}}\n" +
-    "      <a href=\"#\" ng-click=\"editRoom(openedRoom())\" class=\"fa-big-link\">\n" +
+    "      {{roomName(openedRoom)}}\n" +
+    "      <a href=\"#\" ng-click=\"editRoom(openedRoom)\" class=\"fa-big-link\">\n" +
     "        <i class=\"fa fa-pencil-square-o\"></i>\n" +
     "      </a>\n" +
     "      <small class=\"pull-right\">\n" +
-    "        <a href=\"#\" ng-click=\"addUserToRoom(openedRoom())\" class=\"fa-big-link\">\n" +
+    "        <a href=\"#\" ng-click=\"addUserToRoom(openedRoom)\" class=\"fa-big-link\">\n" +
     "          <i class=\"fa fa-user\"></i>\n" +
     "        </a>\n" +
     "\n" +
-    "        <a href=\"#\" ng-click=\"closeRoom(openedRoom())\" class=\"fa-big-link\">\n" +
+    "        <a href=\"#\" ng-click=\"closeRoom(openedRoom)\" class=\"fa-big-link\">\n" +
     "          <i class=\"fa fa-times-circle\"></i>\n" +
     "        </a>\n" +
     "      </small>\n" +
     "    </h2>\n" +
-    "    <div class=\"room-messages\" scroll-bottom=\"openedRoom().messages\">\n" +
+    "    <div class=\"room-messages\" scroll-bottom=\"openedRoom.messages\">\n" +
     "      <ul>\n" +
-    "        <li ng-repeat=\"message in openedRoom().messages track by message.id\" ng-class=\"isMessageSentByMe(message)? 'message-sent':'message-received'\">\n" +
+    "        <li ng-repeat=\"message in openedRoom.messages track by message.id\" ng-class=\"babiliUser.messageSentByMe(message)? 'message-sent':'message-received'\">\n" +
     "          <div>{{message.content}}</div>\n" +
     "          <div class=\"message-information\" ng-hide=\"isMessageSentByMe(message)\">\n" +
     "            Sent by {{message.senderId}} at {{message.createdAt}}\n" +
@@ -353,7 +345,7 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "    <div class=\"room-new-message\">\n" +
     "      <div class=\"row full-height\">\n" +
-    "        <form name=\"form\" ng-submit=\"sendMessage(openedRoom())\">\n" +
+    "        <form name=\"form\" ng-submit=\"sendMessage(openedRoom)\">\n" +
     "          <div class=\"col-md-10 full-height\">\n" +
     "            <textarea class=\"form-control\" id=\"message\" ng-model=\"newMessage.content\" placeholder=\"Type your message\" required></textarea>\n" +
     "          </div>\n" +

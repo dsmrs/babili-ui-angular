@@ -26,9 +26,12 @@
             id: $stateParams.id
           }).$promise;
         },
-        babiliUser: function ($rootScope, user, users, babiliHelper) {
-          return babiliHelper.start($rootScope);
+        babiliUser: function ($rootScope, user, users, babili) {
+          return babili.connect($rootScope, user.babiliToken);
         }
+      },
+      onExit: function (babili) {
+        babili.disconnect();
       }
     });
   });
