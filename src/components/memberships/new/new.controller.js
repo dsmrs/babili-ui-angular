@@ -34,9 +34,9 @@
 
     $scope.removeSelectedUser = function (user) {
       var index;
-      index = $scope.selectedUsers.indexOf(user);
+      index = $scope.newSelectedUsers.indexOf(user);
       if (index > -1) {
-        $scope.selectedUsers.splice(index, 1);
+        $scope.newSelectedUsers.splice(index, 1);
       }
     };
 

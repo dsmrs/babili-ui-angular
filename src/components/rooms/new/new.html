@@ -9,11 +9,11 @@
         <input type="text" class="form-control form-control-inverted" ng-model="room.name" required>
       </div>
       <div class="form-group">
-        <label for="user">Select user to add</label>
+        <label for="user">Select members</label>
         <input type="text" class="form-control form-control-inverted" ng-model="selectedUser" typeahead="user as user.name for user in users | selectableUsers:$viewValue:selectedUsers:user" typeahead-on-select="userSelected($item, $model, $label)" typeahead-editable="false">
       </div>
       <div class="form-group" ng-show="selectedUsers.length > 0">
-        <label for="users">Selected users</label>
+        <label for="users">Members:</label>
         <ul class="selected-users">
           <li ng-repeat="selectedUser in selectedUsers track by selectedUser.id" class="selected-user">
             {{selectedUser.name}}

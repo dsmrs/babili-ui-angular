@@ -6,6 +6,9 @@
         <a href="#" ng-click="createRoom()" class="pull-right fa-big-link"><i class="fa fa-plus-square-o"></i></a>
       </small>
     </h2>
+    <div class="room-list-placeholder" ng-hide="babiliUser.rooms.length > 0">
+      No rooms yet, you can create one by clicking on <i class="fa fa-plus-square-o"></i>
+    </div>
     <ul class="room-list">
       <li ng-repeat="room in babiliUser.rooms" ng-click="openRoom(room)" ng-class="{active: openedRoom.id == room.id}" class="room-list-item">
         {{roomName(room)}}
@@ -32,7 +35,7 @@
 
   <div class="col-md-9 no-room-selected-placeholder" ng-hide="openedRoom">
     <p>
-      Hi {{user}},
+      Hi {{user.name}},
       <br/>
       you need to select a room.
     </p>

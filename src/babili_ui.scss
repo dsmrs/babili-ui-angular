@@ -71,6 +71,13 @@
     h2 {
       height: 40px;
     }
+
+    .room-list-placeholder {
+      font-size: 16px;
+      padding: 5px;
+      text-align: center;
+    }
+
     .room-list {
       overflow: auto;
       height: calc(100% - 80px);
@@ -135,11 +142,15 @@
 
   .selected-users {
     padding: 0;
+    padding-left: 25px;
     .selected-user {
-      list-style-type: none;
-      padding: 5px !important;
+      padding: 2px !important;
       border: 1px solid #FEFEFE;
       margin-bottom: 5px;
+      a {
+        font-size: 1.1em;
+        color: black;
+      }
     }
   }
 

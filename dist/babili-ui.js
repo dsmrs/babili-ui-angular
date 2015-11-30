@@ -187,9 +187,9 @@
 
     $scope.removeSelectedUser = function (user) {
       var index;
-      index = $scope.selectedUsers.indexOf(user);
+      index = $scope.newSelectedUsers.indexOf(user);
       if (index > -1) {
-        $scope.selectedUsers.splice(index, 1);
+        $scope.newSelectedUsers.splice(index, 1);
       }
     };
 
@@ -281,6 +281,9 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "        <a href=\"#\" ng-click=\"createRoom()\" class=\"pull-right fa-big-link\"><i class=\"fa fa-plus-square-o\"></i></a>\n" +
     "      </small>\n" +
     "    </h2>\n" +
+    "    <div class=\"room-list-placeholder\" ng-hide=\"babiliUser.rooms.length > 0\">\n" +
+    "      No rooms yet, you can create one by clicking on <i class=\"fa fa-plus-square-o\"></i>\n" +
+    "    </div>\n" +
     "    <ul class=\"room-list\">\n" +
     "      <li ng-repeat=\"room in babiliUser.rooms\" ng-click=\"openRoom(room)\" ng-class=\"{active: openedRoom.id == room.id}\" class=\"room-list-item\">\n" +
     "        {{roomName(room)}}\n" +
@@ -307,7 +310,7 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "\n" +
     "  <div class=\"col-md-9 no-room-selected-placeholder\" ng-hide=\"openedRoom\">\n" +
     "    <p>\n" +
-    "      Hi {{user}},\n" +
+    "      Hi {{user.name}},\n" +
     "      <br/>\n" +
     "      you need to select a room.\n" +
     "    </p>\n" +
@@ -368,11 +371,11 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "  <form name=\"form\" ng-submit=\"submit()\">\n" +
     "    <div class=\"modal-body\">\n" +
     "      <div class=\"form-group\">\n" +
-    "        <label for=\"user\">Select user to add</label>\n" +
+    "        <label for=\"user\">Select new members</label>\n" +
     "        <input type=\"text\" class=\"form-control form-control-inverted\" ng-model=\"selectedUser\" typeahead=\"user as user.name for user in users | selectableUsers:$viewValue:selectedUsers:user\" typeahead-on-select=\"userSelected($item, $model, $label)\" typeahead-editable=\"false\">\n" +
     "      </div>\n" +
     "      <div class=\"form-group\" ng-show=\"newSelectedUsers.length > 0\">\n" +
-    "        <label for=\"users\">Selected user</label>\n" +
+    "        <label for=\"users\">New members:</label>\n" +
     "        <ul class=\"selected-users\">\n" +
     "          <li ng-repeat=\"newSelectedUser in newSelectedUsers track by newSelectedUser.id\" class=\"selected-user\">\n" +
     "            {{newSelectedUser.name}}\n" +
@@ -425,11 +428,11 @@ angular.module('babili-ui').run(['$templateCache', function($templateCache) {
     "        <input type=\"text\" class=\"form-control form-control-inverted\" ng-model=\"room.name\" required>\n" +
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
-    "        <label for=\"user\">Select user to add</label>\n" +
+    "        <label for=\"user\">Select members</label>\n" +
     "        <input type=\"text\" class=\"form-control form-control-inverted\" ng-model=\"selectedUser\" typeahead=\"user as user.name for user in users | selectableUsers:$viewValue:selectedUsers:user\" typeahead-on-select=\"userSelected($item, $model, $label)\" typeahead-editable=\"false\">\n" +
     "      </div>\n" +
     "      <div class=\"form-group\" ng-show=\"selectedUsers.length > 0\">\n" +
-    "        <label for=\"users\">Selected users</label>\n" +
+    "        <label for=\"users\">Members:</label>\n" +
     "        <ul class=\"selected-users\">\n" +
     "          <li ng-repeat=\"selectedUser in selectedUsers track by selectedUser.id\" class=\"selected-user\">\n" +
     "            {{selectedUser.name}}\n" +

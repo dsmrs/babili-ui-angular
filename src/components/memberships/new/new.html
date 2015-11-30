@@ -5,11 +5,11 @@
   <form name="form" ng-submit="submit()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="user">Select user to add</label>
+        <label for="user">Select new members</label>
         <input type="text" class="form-control form-control-inverted" ng-model="selectedUser" typeahead="user as user.name for user in users | selectableUsers:$viewValue:selectedUsers:user" typeahead-on-select="userSelected($item, $model, $label)" typeahead-editable="false">
       </div>
       <div class="form-group" ng-show="newSelectedUsers.length > 0">
-        <label for="users">Selected user</label>
+        <label for="users">New members:</label>
         <ul class="selected-users">
           <li ng-repeat="newSelectedUser in newSelectedUsers track by newSelectedUser.id" class="selected-user">
             {{newSelectedUser.name}}

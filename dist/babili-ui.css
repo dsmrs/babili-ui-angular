@@ -60,6 +60,11 @@
 .babili-ui .rooms h2 {
   height: 40px;
 }
+.babili-ui .rooms .room-list-placeholder {
+  font-size: 16px;
+  padding: 5px;
+  text-align: center;
+}
 .babili-ui .rooms .room-list {
   overflow: auto;
   height: calc(100% - 80px);
@@ -114,10 +119,14 @@
 }
 .babili-ui .selected-users {
   padding: 0;
+  padding-left: 25px;
 }
 .babili-ui .selected-users .selected-user {
-  list-style-type: none;
-  padding: 5px !important;
+  padding: 2px !important;
   border: 1px solid #FEFEFE;
   margin-bottom: 5px;
+}
+.babili-ui .selected-users .selected-user a {
+  font-size: 1.1em;
+  color: black;
 }
