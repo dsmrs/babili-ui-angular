@@ -3,7 +3,11 @@
 
   var module = angular.module("babili-ui", []);
 
-  module.config(function ($stateProvider, $locationProvider) {
+  module.config(function ($stateProvider, $locationProvider, babiliProvider) {
+    babiliProvider.configure({
+      apiUrl:    "https://babili-api.spin42.me",
+      socketUrl: "https://babili-pusher.spin42.me"
+    });
     $locationProvider.html5Mode(true);
     $stateProvider
 
